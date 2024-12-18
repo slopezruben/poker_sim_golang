@@ -5,6 +5,7 @@ import (
     "evilbalatro/deck"
 )
 
+
 func main() {
     fmt.Println("Hello Evil Balatro")
 
@@ -15,15 +16,14 @@ func main() {
        fmt.Println(err);
     }
 
-    for i := 0; i < 52; i++ {
-        c := d.GetCards();
-        fmt.Println(c[i].ToString())
-    }
-
+    fmt.Println("Mazo Inicial")
     d.Shuffle();
+    deck.ShowCards(d.GetCards());
 
-    for i := 0; i < 52; i++ {
-        c := d.GetCards();
-        fmt.Println(c[i].ToString())
-    }
+    fmt.Println("Cartas Robadas")
+    drawn := d.Draw(3)
+    deck.ShowCards(drawn);
+
+    fmt.Println("Cartas Restantes")
+    deck.ShowCards(d.GetCards());
 }

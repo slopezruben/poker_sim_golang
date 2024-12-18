@@ -19,9 +19,11 @@ type card struct {
 var suits []string = []string{"Diamonds", "Clubs", "Hearts", "Spades"}
 
 type deck struct {
-	cards [52]card
+	cards []card
+
     GetCards func() []card
     Shuffle func();
+    Draw func(nCards int) []card;
 }
 
 func NewCard(value int, suit string) (card, error) {
@@ -56,10 +58,12 @@ func NewCard(value int, suit string) (card, error) {
     return c, nil;
 }
 
-
 func CreateDeck() *deck {
     d := deck{}
+    d.cards = make([]card, 52)
+
     d.GetCards = func() []card { return d.cards[:]}
+
     d.Shuffle = func() {
         for i := 0; i < 52; i++ {
             j := i + (rand.Int() % (52 -i));   
@@ -67,11 +71,24 @@ func CreateDeck() *deck {
         }
     }
 
+    d.Draw = func(nCards int) []card {
+        draw := make([]card, nCards)
+        var drawedCard card;
+        
+        for i := 0; i < nCards; i++ {
+            drawedCard, d.cards = d.cards[len(d.cards)-1], d.cards[:len(d.cards)-1]
+            draw = append(draw, drawedCard)
+        }
+        
+        return draw;
+    }
+
     return &d 
 }
 
 func StartDeck(d *deck) error {
     var index int = 0;
+
     for _, s := range suits {
         for i:=1 ; i < 14; i++ {
           var card, err = NewCard(i, s);
@@ -85,4 +102,10 @@ func StartDeck(d *deck) error {
         }
     } 
     return nil
+}
+
+func ShowCards(c []card) {
+    for i := 0; i < len(c); i++ {
+        fmt.Println(c[i].ToString())
+    }
 }
